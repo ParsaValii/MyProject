@@ -89,13 +89,13 @@ namespace MyProject.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit([Bind("Id,GroupTitle")] PageGroup pageGroup)
+        public async Task<IActionResult> Edit([Bind("Id,GroupTitle")] PageGroup pageGroup)
         {
             
             if (ModelState.IsValid)
             {
                 _pagegroupService.UpdateGroup(pageGroup);
-                _pagegroupService.Save();
+                await _pagegroupService.Save();
                 return RedirectToAction(nameof(Index));
             }
             return View(pageGroup);
