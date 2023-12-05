@@ -15,9 +15,9 @@ namespace MyProject.Areas.Admin.Controllers
     public class PageGroupsController : Controller
     {
         private readonly ParsaDbContext _context;
-        PageGroupService _pagegroupService;
+        IPageGroup _pagegroupService;
 
-        public PageGroupsController(ParsaDbContext context, PageGroupService pageGroupService)
+        public PageGroupsController(ParsaDbContext context, IPageGroup pageGroupService)
         {
             _pagegroupService = pageGroupService;
             _context = context;
