@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Domain.Entities;
+using Service.Services;
+using Service.Interfaces;
 
 namespace MyProject.Areas.Admin.Controllers
 {
@@ -13,9 +15,11 @@ namespace MyProject.Areas.Admin.Controllers
     public class PageGroupsController : Controller
     {
         private readonly ParsaDbContext _context;
+        PageGroupService _pagegroupService;
 
-        public PageGroupsController(ParsaDbContext context)
+        public PageGroupsController(ParsaDbContext context, PageGroupService pageGroupService)
         {
+            _pagegroupService = pageGroupService;
             _context = context;
         }
 
