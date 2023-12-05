@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Service.Services
 {
-    public class PageGroupService : IPageGroup
+    public class PageGroupService : IPageGroupService
     {
         ParsaDbContext _context;
         public PageGroupService(ParsaDbContext dbContext)

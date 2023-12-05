@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Service.Interfaces
 {
-    public interface IPage
+    public interface IPageService
     {
         IEnumerable<Page> GetAllPages();
         Task<Page> GetPageById(int id);

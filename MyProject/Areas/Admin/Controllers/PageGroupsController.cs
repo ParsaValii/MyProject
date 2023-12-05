@@ -14,19 +14,16 @@ namespace MyProject.Areas.Admin.Controllers
     [Area("Admin")]
     public class PageGroupsController : Controller
     {
-        private readonly ParsaDbContext _context;
-        IPageGroup _pagegroupService;
-
-        public PageGroupsController(ParsaDbContext context, IPageGroup pageGroupService)
+        IPageGroupService _pagegroupService;
+        public PageGroupsController(IPageGroupService pageGroupService)
         {
             _pagegroupService = pageGroupService;
-            _context = context;
         }
 
         // GET: Admin/PageGroups
         public IActionResult Index()
         {
-              return View(_pagegroupService.GetAllGroups());
+            return View(_pagegroupService.GetAllGroups());
         }
 
         // GET: Admin/PageGroups/Details/5
@@ -91,7 +88,7 @@ namespace MyProject.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit([Bind("Id,GroupTitle")] PageGroup pageGroup)
         {
-            
+
             if (ModelState.IsValid)
             {
                 _pagegroupService.UpdateGroup(pageGroup);
@@ -124,7 +121,7 @@ namespace MyProject.Areas.Admin.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             await _pagegroupService.DeleteGroup(id);
-            await _context.SaveChangesAsync();
+            await _pagegroupService.Save();
             return RedirectToAction(nameof(Index));
         }
         protected override void Dispose(bool disposing)

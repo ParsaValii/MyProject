@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Service.Services
 {
-    public class PageService : IPage
+    public class PageService : IPageService
     {
         ParsaDbContext _context;
         public PageService(ParsaDbContext dbContext)

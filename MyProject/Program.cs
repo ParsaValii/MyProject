@@ -9,8 +9,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ParsaDbContext>(
         options => options.UseSqlServer("Data Source=FlowAley;Initial Catalog=ParsaDb;Integrated Security=True;Trust Server Certificate=True"));
-builder.Services.AddScoped<IPageGroup, PageGroupService>();
-builder.Services.AddScoped<IPage, PageService>();
+builder.Services.AddScoped<IPageGroupService, PageGroupService>();
+builder.Services.AddScoped<IPageService, PageService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
