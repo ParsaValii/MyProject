@@ -24,23 +24,20 @@ namespace MyProject.Areas.Admin.Controllers
         }
 
         // GET: Admin/PageGroups
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-              return _context.PageGroups != null ? 
-                          View(await _context.PageGroups.ToListAsync()) :
-                          Problem("Entity set 'ParsaDbContext.PageGroups'  is null.");
+              return View(_pagegroupService.GetAllGroups());
         }
 
         // GET: Admin/PageGroups/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.PageGroups == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var pageGroup = await _context.PageGroups
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var pageGroup = await _pagegroupService.GetGroupById(id.Value);
             if (pageGroup == null)
             {
                 return NotFound();
@@ -64,8 +61,8 @@ namespace MyProject.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(pageGroup);
-                await _context.SaveChangesAsync();
+                await _pagegroupService.InsertGroup(pageGroup);
+                await _pagegroupService.Save();
                 return RedirectToAction(nameof(Index));
             }
             return View(pageGroup);
@@ -74,12 +71,12 @@ namespace MyProject.Areas.Admin.Controllers
         // GET: Admin/PageGroups/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.PageGroups == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var pageGroup = await _context.PageGroups.FindAsync(id);
+            var pageGroup = await _pagegroupService.GetGroupById(id.Value);
             if (pageGroup == null)
             {
                 return NotFound();
@@ -92,31 +89,13 @@ namespace MyProject.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,GroupTitle")] PageGroup pageGroup)
+        public IActionResult Edit([Bind("Id,GroupTitle")] PageGroup pageGroup)
         {
-            if (id != pageGroup.Id)
-            {
-                return NotFound();
-            }
-
+            
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(pageGroup);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!PageGroupExists(pageGroup.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                _pagegroupService.UpdateGroup(pageGroup);
+                _pagegroupService.Save();
                 return RedirectToAction(nameof(Index));
             }
             return View(pageGroup);
@@ -125,13 +104,12 @@ namespace MyProject.Areas.Admin.Controllers
         // GET: Admin/PageGroups/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.PageGroups == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var pageGroup = await _context.PageGroups
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var pageGroup = await _pagegroupService.GetGroupById(id.Value);
             if (pageGroup == null)
             {
                 return NotFound();
@@ -145,23 +123,17 @@ namespace MyProject.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.PageGroups == null)
-            {
-                return Problem("Entity set 'ParsaDbContext.PageGroups'  is null.");
-            }
-            var pageGroup = await _context.PageGroups.FindAsync(id);
-            if (pageGroup != null)
-            {
-                _context.PageGroups.Remove(pageGroup);
-            }
-
+            await _pagegroupService.DeleteGroup(id);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-
-        private bool PageGroupExists(int id)
+        protected override void Dispose(bool disposing)
         {
-          return (_context.PageGroups?.Any(e => e.Id == id)).GetValueOrDefault();
+            if (disposing)
+            {
+                _pagegroupService.Dispose();
+            }
+            base.Dispose(disposing);
         }
     }
 }
