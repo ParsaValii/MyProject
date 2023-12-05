@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Service.Interfaces
 {
-    public interface IPageGroup
+    public interface IPageGroup : IDisposable
     {
         IEnumerable<PageGroup> GetAllGroups();
         Task<PageGroup> GetGroupById(int id);
