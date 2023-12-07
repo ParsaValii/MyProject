@@ -28,7 +28,7 @@
                 <td>
                     <a class="btn btn-sm btn-warning" onclick="editGroup(@item.Id)">Edit</a>
                     <a class="btn btn-sm btn-danger" onclick="deleteGroup(@item.Id)">Delete</a>
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    <a class="btn btn-sm btn-info" asp-action="Details" asp-route-id="@item.Id">Details</a>
                 </td>
             </tr>
         }
