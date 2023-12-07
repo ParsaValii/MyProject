@@ -27,11 +27,13 @@ namespace Domain.Entities
         [Display(Name = "خلاصه")]
         [Required(ErrorMessage = "required")]
         [MaxLength(350)]
+        [DataType(DataType.MultilineText)]
         public string ShortDiscription { get; set; }
 
 
         [Display(Name = "متن")]
         [Required(ErrorMessage = "required")]
+        [DataType(DataType.MultilineText)]
         public string Text { get; set; }
 
 
