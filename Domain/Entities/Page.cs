@@ -53,8 +53,8 @@ namespace Domain.Entities
         public DateTime CreateDate { get; set; }
 
 
-
+        [Required(ErrorMessage = "فیلد PageGroup اجباری است.")]
         public PageGroup PageGroup { get; set; }
-        public List<PageComment> PageComments { get; set; }
+        public List<PageComment>? PageComments { get; set; }
     }
 }
