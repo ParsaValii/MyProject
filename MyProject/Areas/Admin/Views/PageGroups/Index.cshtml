@@ -27,7 +27,7 @@
                 </td>
                 <td>
                     <a class="btn btn-sm btn-warning" onclick="editGroup(@item.Id)">Edit</a>
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                    <a class="btn btn-sm btn-danger" onclick="deleteGroup(@item.Id)">Delete</a>
                     <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
                 </td>
             </tr>
@@ -68,6 +68,15 @@
             {
                 $("#modelId").modal("show");
                 $("#mymodallable").html("Edit Group");
+                $("#myModalBody").html(result);
+            })
+        }
+        function deleteGroup(id)
+        {
+            $.get("PageGroups/Delete/"+id, function(result)
+            {
+                $("#modelId").modal("show");
+                $("#mymodallable").html("Delete Group");
                 $("#myModalBody").html(result);
             })
         }
