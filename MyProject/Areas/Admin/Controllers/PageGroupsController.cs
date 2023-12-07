@@ -46,7 +46,7 @@ namespace MyProject.Areas.Admin.Controllers
         // GET: Admin/PageGroups/Create
         public IActionResult Create()
         {
-            return View();
+            return PartialView();
         }
 
         // POST: Admin/PageGroups/Create
