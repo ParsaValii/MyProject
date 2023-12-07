@@ -59,16 +59,13 @@ namespace MyProject.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,PageGroupId,Title,ShortDiscription,Text,Visit,ImageName,ShowInSlider,CreateDate")] Page page)
         {
-            if (ModelState.IsValid)
-            {
-                page.Visit = 0;
-                page.CreateDate = DateTime.Now;
-                _context.Add(page);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["PageGroupId"] = new SelectList(_context.PageGroups, "Id", "GroupTitle", page.PageGroupId);
-            return View(page);
+
+            page.Visit = 0;
+            page.CreateDate = DateTime.Now;
+            _context.Add(page);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+
         }
 
         // GET: Admin/Pages/Edit/5
@@ -157,14 +154,14 @@ namespace MyProject.Areas.Admin.Controllers
             {
                 _context.Pages.Remove(page);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool PageExists(int id)
         {
-          return (_context.Pages?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.Pages?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }
