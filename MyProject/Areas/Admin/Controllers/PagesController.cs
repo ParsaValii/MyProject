@@ -6,17 +6,22 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Domain.Entities;
+using Service.Services;
+using Service.Interfaces;
 
 namespace MyProject.Areas.Admin.Controllers
 {
     [Area("Admin")]
     public class PagesController : Controller
     {
-        private readonly ParsaDbContext _context;
+        private IPageService _pageService;
+        private IPageGroupService _pageGroupService;
+        private readonly ParsaDbContext _context = new ParsaDbContext();
 
-        public PagesController(ParsaDbContext context)
+        public PagesController()
         {
-            _context = context;
+            _pageService = new PageService(_context);
+            _pageGroupService = new PageGroupService(_context);
         }
 
         // GET: Admin/Pages
@@ -29,7 +34,7 @@ namespace MyProject.Areas.Admin.Controllers
         // GET: Admin/Pages/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Pages == null)
+            if (id == null)
             {
                 return NotFound();
             }
@@ -48,7 +53,7 @@ namespace MyProject.Areas.Admin.Controllers
         // GET: Admin/Pages/Create
         public IActionResult Create()
         {
-            ViewData["PageGroupId"] = new SelectList(_context.PageGroups, "Id", "GroupTitle");
+            ViewData["PageGroupId"] = new SelectList(_pageGroupService.GetAllGroups(), "Id", "GroupTitle");
             return View();
         }
 
@@ -62,8 +67,8 @@ namespace MyProject.Areas.Admin.Controllers
 
             page.Visit = 0;
             page.CreateDate = DateTime.Now;
-            _context.Add(page);
-            await _context.SaveChangesAsync();
+            await _pageService.InsertPage(page);
+            await _pageService.Save();
             return RedirectToAction(nameof(Index));
 
         }
@@ -71,17 +76,17 @@ namespace MyProject.Areas.Admin.Controllers
         // GET: Admin/Pages/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Pages == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var page = await _context.Pages.FindAsync(id);
+            var page = await _pageService.GetPageById(id.Value);
             if (page == null)
             {
                 return NotFound();
             }
-            ViewData["PageGroupId"] = new SelectList(_context.PageGroups, "Id", "GroupTitle", page.PageGroupId);
+            ViewData["PageGroupId"] = new SelectList(_pageGroupService.GetAllGroups(), "Id", "GroupTitle", page.PageGroupId);
             return View(page);
         }
 
@@ -97,28 +102,24 @@ namespace MyProject.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+
+            try
             {
-                try
-                {
-                    _context.Update(page);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!PageExists(page.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                _pageService.UpdatePage(page);
+                await _pageService.Save();
             }
-            ViewData["PageGroupId"] = new SelectList(_context.PageGroups, "Id", "GroupTitle", page.PageGroupId);
-            return View(page);
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!PageExists(page.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Admin/Pages/Delete/5

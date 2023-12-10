@@ -50,6 +50,7 @@ namespace Domain.Entities
 
 
         [Display(Name = "تاریخ ایجاد")]
+        [DisplayFormat(DataFormatString = "{0: yyyy/MM/dd}")]
         public DateTime CreateDate { get; set; }
         
         public PageGroup PageGroup { get; set; }

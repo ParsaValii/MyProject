@@ -40,7 +40,7 @@ namespace MyProject.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            return View(pageGroup);
+            return PartialView(pageGroup);
         }
 
         // GET: Admin/PageGroups/Create
